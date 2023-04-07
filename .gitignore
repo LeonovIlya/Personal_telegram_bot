@@ -1,0 +1,7 @@
+/*.log
+/.env
+/notebook/*.txt
+/notebook/*.ogg
+/.env/
+/venv/
+/.idea/

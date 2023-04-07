@@ -1,0 +1,10 @@
+aiogram
+requests
+openai
+aiohttp
+python-dotenv
+vosk
+aiofiles
+sqlalchemy
+psycopg2
+rutimeparser
