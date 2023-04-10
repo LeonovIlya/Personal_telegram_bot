@@ -22,18 +22,16 @@ class STT:
         self._check_model()
         model = Model(self.model_path)
         self.recognizer = KaldiRecognizer(model, self.sample_rate)
-        self.recognizer.SetWords(True)
+        self.recognizer.SetWords(False)
 
     def _check_model(self):
         if not os.path.exists(self.model_path):
-            raise Exception('Модель не найден')
+            raise Exception('Модель не найдена')
 
     def audio_to_text(self, audio_file=None) -> str:
-        with subprocess.Popen(["C:/ffmpeg/bin/ffmpeg.exe",
-                               "-loglevel", "quiet", "-i",
-                               audio_file,
-                               "-ar", str(self.sample_rate),
-                               "-ac", "1", "-f", "s16le", "-"],
+        cmd = f'ffmpeg -loglevel quiet -i {audio_file} -ar' \
+              f' {str(self.sample_rate)} -ac 1 -f s16le -'
+        with subprocess.Popen(cmd,
                               stdout=subprocess.PIPE,
                               shell=True) as process:
             while True:

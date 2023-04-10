@@ -26,7 +26,7 @@ delete_words = ['удалить', 'удали', 'удалит', 'залить', 
 # получаем голосовуху и распознаём, если первое слово удалить
 # и второе цифра из словаря - удаляем запись
 async def get_voice(message: types.Message, state: FSMContext):
-    if message.content_type.isinstance(types.ContentType.VOICE):
+    if isinstance(message.content_type, types.ContentType.VOICE):
         if voice_file := message.voice:
             await voice_file.download(
                 destination_file='./notebook/voice_file.ogg')
@@ -43,7 +43,7 @@ async def get_voice(message: types.Message, state: FSMContext):
                 os.remove('./notebook/voice_file.ogg')
         else:
             await message.answer(text='Непонятно, давай еще раз!',
-                                 reply_markup=keyboard.add_record)
+                                 reply_markup=keyboard.back)
     else:
         await message.answer(text='Это не голосовуха! Попробуй еще раз!',
                              reply_markup=keyboard.back)
