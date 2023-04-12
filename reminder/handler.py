@@ -62,8 +62,7 @@ async def get_records(message: types.Message):
     await UserState.reminder.set()
 
 
-async def change_reminder_time(callback: types.CallbackQuery, state:
-                               FSMContext):
+async def change_reminder_time(callback: types.CallbackQuery):
     if callback.data == 'fifteen_minutes':
         new_time = reminder_result.reminder_time + dt.timedelta(minutes=15)
         change_time(rec_id=reminder_result.id, new_time=new_time)

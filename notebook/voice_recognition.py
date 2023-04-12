@@ -24,9 +24,9 @@ class STT:
         self.recognizer = KaldiRecognizer(model, self.sample_rate)
         self.recognizer.SetWords(False)
 
-    def _check_model(self):
+    def _check_model(self) -> None:
         if not os.path.exists(self.model_path):
-            raise Exception('Модель не найдена')
+            raise Exception('Модель не найдена!')
 
     def audio_to_text(self, audio_file=None) -> str:
         cmd = f'ffmpeg -loglevel quiet -i {audio_file} -ar' \

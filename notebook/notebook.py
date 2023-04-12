@@ -2,9 +2,11 @@ import aiofiles
 import logging
 import os
 
+from typing import Union, Optional
+
 
 # читаем записи в блокноте построчно
-async def read_file(user_id):
+async def read_file(user_id: int) -> Union[str, Exception]:
     try:
         async with aiofiles.open(f'./notebook/{user_id}.txt', mode='r',
                                  encoding='utf-8') as file:
@@ -20,7 +22,7 @@ async def read_file(user_id):
 
 
 # добавляем новую запись в конец файла
-async def write_file(user_id, text):
+async def write_file(user_id: int, text: str) -> Optional[Exception]:
     try:
         async with aiofiles.open(f'./notebook/{user_id}.txt',
                                  mode='a',
@@ -32,7 +34,7 @@ async def write_file(user_id, text):
 
 
 # удаляем запись методом невключения её при перезаписи файла
-async def delete_record(user_id, text):
+async def delete_record(user_id: int, text: str) -> Optional[Exception]:
     try:
         async with aiofiles.open(f'./notebook/{user_id}.txt',
                                  mode='r+',
@@ -49,7 +51,7 @@ async def delete_record(user_id, text):
 
 
 # проверяем наличие файла при старте бота, если нет - создаём
-async def create_file(user_id):
+async def create_file(user_id: int) -> Optional[Exception]:
     try:
         if os.path.isfile(f'./notebook/{user_id}.txt'):
             pass

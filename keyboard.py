@@ -35,8 +35,7 @@ change_reminder_time = InlineKeyboardMarkup(inline_keyboard=[
     [InlineKeyboardButton('Отложить на 1 час',
                           callback_data='one_hour')],
     [InlineKeyboardButton('Подтвердить',
-                          callback_data='reminder_done')]
-])
+                          callback_data='reminder_done')]])
 
 # универсальная кнопка назад (в стартовое меню)
 back = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text='Назад')]],

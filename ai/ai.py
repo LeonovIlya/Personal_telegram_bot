@@ -7,7 +7,7 @@ openai.api_key = config.AI_API_TOKEN
 
 
 # направляем запрос ИИ через АПИ и получаем ответ
-async def get_response(message):
+async def get_response(message: str) -> str:
     try:
         response = await openai.Completion.acreate(
             engine="text-davinci-003",
@@ -17,8 +17,6 @@ async def get_response(message):
             top_p=1,
             frequency_penalty=0,
             presence_penalty=0)
-        logging.info(f'NEW AI QUERY : {message}\n AI ANSWER :'
-                     f' {response["choices"][0]["text"]}')
         return response['choices'][0]['text']
     except Exception as error:
         logging.info(f'{error}')

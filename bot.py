@@ -17,7 +17,7 @@ from reminder.handler import check_records
 logger = logging.getLogger(__name__)
 
 
-async def main(loop):
+async def main(loop) -> None:
     logging.basicConfig(filename='bot_log.log',
                         filemode='a',
                         level=logging.INFO,
@@ -40,7 +40,7 @@ async def main(loop):
     await dp.start_polling()
 
 
-async def check_reminders():
+async def check_reminders() -> None:
     while True:
         await check_records()
         await asyncio.sleep(60)

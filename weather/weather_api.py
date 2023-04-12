@@ -2,13 +2,13 @@ import json
 import logging
 from aiohttp import ClientSession
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime as dt
 
 import config
 
 
 # получаем json через get запрос к api по токену
-async def get_json(lat, lon):
+async def get_json(lat: int, lon: int) -> str:
     async with ClientSession() as session:
         url = 'https://api.openweathermap.org/data/2.5/weather'
         params = {'lat': lat, 'lon': lon, 'appid': config.WEATHER_API_TOKEN,
@@ -22,7 +22,7 @@ async def get_json(lat, lon):
 
 
 # получаем ответ на запрос, парсим, возвращаем текст
-async def get_weather(lat, lon):
+async def get_weather(lat: int, lon: int) -> str:
     response = await get_json(lat, lon)
     wthr = parse_response(response)
     return f'📍: {wthr.location}, {wthr.description}\n' \
@@ -41,12 +41,12 @@ class Weather:
     temperature_feeling: float
     description: str
     wind_speed: float
-    sunrise: datetime
-    sunset: datetime
+    sunrise: dt
+    sunset: dt
 
 
 # парсим полученный ответ на запрос
-def parse_response(response):
+def parse_response(response: str) -> Weather:
     openweather_dict = json.loads(response)
     return Weather(
         location=openweather_dict['name'],
