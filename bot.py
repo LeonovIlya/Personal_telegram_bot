@@ -1,3 +1,5 @@
+"""Основной модуль бота"""
+
 import asyncio
 import logging
 
@@ -8,15 +10,15 @@ import config
 from ai.handler import register_handlers_ai
 from auth.handler import register_handlers_auth
 from notebook.handler import register_handlers_notebook
+from reminder.handler import check_records
 from reminder.handler import register_handlers_reminder
 from weather.handler import register_handlers_weather
-
-from reminder.handler import check_records
 
 
 logger = logging.getLogger(__name__)
 
 
+# настраиваем логер, бота
 async def main(loop) -> None:
     logging.basicConfig(filename='bot_log.log',
                         filemode='a',
@@ -40,6 +42,7 @@ async def main(loop) -> None:
     await dp.start_polling()
 
 
+# функция проверки напоминаний в бд каждую минуту
 async def check_reminders() -> None:
     while True:
         await check_records()

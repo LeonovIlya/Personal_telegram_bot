@@ -1,7 +1,8 @@
+"""Обработчик модуля напоминаний"""
+
 import datetime as dt
 
 from aiogram import Bot, Dispatcher, types
-from aiogram.dispatcher import FSMContext
 from rutimeparser import parse, get_clear_text
 
 import config
@@ -13,9 +14,10 @@ from states import UserState
 
 bot = Bot(token=config.BOT_TOKEN)
 
-reminder_result = None
+REMINDER_RESULT = None
 
 
+# проверяем наличие записей в бд с текущими датой и времени
 async def check_records():
     time_now = dt.datetime.now().strftime('%Y-%m-%d %H:%M')
     result = check_recs(time_now)
@@ -25,18 +27,18 @@ async def check_records():
                                     f'{result.reminder_time.strftime("%d/%m/%Y, %H:%M")}\n'
                                     f'{result.text}',
                                reply_markup=keyboard.change_reminder_time)
-        global reminder_result
-        reminder_result = result
-    else:
-        pass
+        global REMINDER_RESULT
+        REMINDER_RESULT = result
 
 
+# Устанавливаем состояние для добавления записи
 async def set_add_record(message: types.Message):
     await message.answer(text='Введите запись:',
                          reply_markup=keyboard.back)
     await UserState.reminder_add.set()
 
 
+# Парсим запись и добавляем в бд
 async def add_record(message: types.Message):
     user_id = message.from_user.id
     datetime = parse(message.text)
@@ -51,6 +53,7 @@ async def add_record(message: types.Message):
                              reply_markup=keyboard.back)
 
 
+# Получаем записи из бд
 async def get_records(message: types.Message):
     text = get_recs(user_id=message.from_user.id)
     if text:
@@ -62,10 +65,11 @@ async def get_records(message: types.Message):
     await UserState.reminder.set()
 
 
+# Изменяем время напоминания (откладываем) или подтверждаем
 async def change_reminder_time(callback: types.CallbackQuery):
     if callback.data == 'fifteen_minutes':
-        new_time = reminder_result.reminder_time + dt.timedelta(minutes=15)
-        change_time(rec_id=reminder_result.id, new_time=new_time)
+        new_time = REMINDER_RESULT.reminder_time + dt.timedelta(minutes=15)
+        change_time(rec_id=REMINDER_RESULT.id, new_time=new_time)
         await callback.bot.edit_message_reply_markup(
             chat_id=callback.from_user.id,
             message_id=callback.message.message_id,
@@ -73,8 +77,8 @@ async def change_reminder_time(callback: types.CallbackQuery):
         await callback.message.answer(text='Напоминание отложено на 15 минут!',
                                       reply_markup=keyboard.back)
     elif callback.data == 'one_hour':
-        new_time = reminder_result.reminder_time + dt.timedelta(hours=1)
-        change_time(rec_id=reminder_result.id, new_time=new_time)
+        new_time = REMINDER_RESULT.reminder_time + dt.timedelta(hours=1)
+        change_time(rec_id=REMINDER_RESULT.id, new_time=new_time)
         await callback.bot.edit_message_reply_markup(
             chat_id=callback.from_user.id,
             message_id=callback.message.message_id,
@@ -82,7 +86,7 @@ async def change_reminder_time(callback: types.CallbackQuery):
         await callback.message.answer(text='Напоминание отложено на 1 час!',
                                       reply_markup=keyboard.back)
     elif callback.data == 'reminder_done':
-        make_done_rec(rec_id=reminder_result.id)
+        make_done_rec(rec_id=REMINDER_RESULT.id)
         await callback.bot.edit_message_reply_markup(
             chat_id=callback.from_user.id,
             message_id=callback.message.message_id,
@@ -93,6 +97,7 @@ async def change_reminder_time(callback: types.CallbackQuery):
         print('Something went wrong!')
 
 
+# компануем в обработчик
 def register_handlers_reminder(dp: Dispatcher):
     dp.register_message_handler(get_records,
                                 text="Напоминалка",

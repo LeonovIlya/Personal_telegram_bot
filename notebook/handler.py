@@ -1,3 +1,5 @@
+"""Обработчик модуля записной книжки"""
+
 import os
 
 from aiogram import types, Dispatcher
@@ -6,8 +8,8 @@ from aiogram.dispatcher import FSMContext
 
 import keyboard
 from states import UserState
-from .notebook import read_file, write_file, delete_record
-from .voice_recognition import STT
+from notebook.notebook import read_file, write_file, delete_record
+from notebook.voice_recognition import STT
 
 stt = STT()
 
@@ -26,7 +28,7 @@ delete_words = ['удалить', 'удали', 'удалит', 'залить', 
 # получаем голосовое сообщение и распознаём, если первое слово удалить
 # и второе цифра из словаря - удаляем запись
 async def get_voice(message: types.Message, state: FSMContext):
-    if isinstance(message.content_type, types.ContentType.VOICE):
+    if isinstance(message.content_type, type(types.ContentType.VOICE)):
         if voice_file := message.voice:
             await voice_file.download(
                 destination_file='./notebook/voice_file.ogg')

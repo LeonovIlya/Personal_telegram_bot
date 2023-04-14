@@ -1,3 +1,5 @@
+"""Обработчик AI модуля"""
+
 from aiogram import types, Dispatcher
 
 import keyboard

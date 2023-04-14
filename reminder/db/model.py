@@ -1,3 +1,4 @@
+"""Модуль модели данных напоминаний"""
 import datetime as DT
 
 from sqlalchemy import create_engine, Column, Integer,\

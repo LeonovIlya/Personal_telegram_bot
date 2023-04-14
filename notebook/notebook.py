@@ -1,12 +1,14 @@
-import aiofiles
+"""Модуль записной книжки"""
+
+
 import logging
 import os
-
-from typing import Union, Optional
+from typing import Optional
+import aiofiles
 
 
 # читаем записи в блокноте построчно
-async def read_file(user_id: int) -> Union[str, Exception]:
+async def read_file(user_id: int) -> Optional[str]:
     try:
         async with aiofiles.open(f'./notebook/{user_id}.txt', mode='r',
                                  encoding='utf-8') as file:
@@ -17,24 +19,24 @@ async def read_file(user_id: int) -> Union[str, Exception]:
                 lines_id += 1
             return ''.join(lines)
     except Exception as error:
-        logging.info(f'{error}')
-        return error
+        logging.info('%s', error)
+        return None
 
 
 # добавляем новую запись в конец файла
-async def write_file(user_id: int, text: str) -> Optional[Exception]:
+async def write_file(user_id: int, text: str) -> None:
     try:
         async with aiofiles.open(f'./notebook/{user_id}.txt',
                                  mode='a',
                                  encoding='utf-8') as file:
             await file.write(f'{text}\n')
     except Exception as error:
-        logging.info(f'{error}')
-        return error
+        logging.info('%s', error)
+        return None
 
 
 # удаляем запись методом невключения её при перезаписи файла
-async def delete_record(user_id: int, text: str) -> Optional[Exception]:
+async def delete_record(user_id: int, text: str) -> None:
     try:
         async with aiofiles.open(f'./notebook/{user_id}.txt',
                                  mode='r+',
@@ -46,12 +48,12 @@ async def delete_record(user_id: int, text: str) -> Optional[Exception]:
                     await file.write(line)
             await file.truncate()
     except Exception as error:
-        logging.info(f'{error}')
-        return error
+        logging.info('%s', error)
+        return None
 
 
 # проверяем наличие файла при старте бота, если нет - создаём
-async def create_file(user_id: int) -> Optional[Exception]:
+async def create_file(user_id: int) -> None:
     try:
         if os.path.isfile(f'./notebook/{user_id}.txt'):
             pass
@@ -61,5 +63,5 @@ async def create_file(user_id: int) -> Optional[Exception]:
                                      encoding='utf-8') as file:
                 await file.close()
     except Exception as error:
-        logging.info(f'{error}')
-        return error
+        logging.info('%s', error)
+        return None

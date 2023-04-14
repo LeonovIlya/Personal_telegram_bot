@@ -1,3 +1,5 @@
+"""Обработчик авторизации пользователя"""
+
 from aiogram import types, Dispatcher
 
 import config

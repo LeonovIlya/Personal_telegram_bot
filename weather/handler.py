@@ -1,3 +1,5 @@
+"""Обработчик модуля погоды"""
+
 from aiogram import types, Dispatcher
 
 import keyboard

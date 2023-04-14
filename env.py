@@ -1,0 +1,9 @@
+BOT_TOKEN='token from BotFather'
+WEATHER_API_TOKEN='token from openweather api'
+AI_API_TOKEN='token from openai api'
+ID_AUTH_USERS=tg_ids_without_quotes_and_spaces_comma_separated
+DB_USER='db user'
+DB_PASSWORD='db password'
+DB_HOST='db host'
+DB_PORT='db port'
+DB_NAME='db name'

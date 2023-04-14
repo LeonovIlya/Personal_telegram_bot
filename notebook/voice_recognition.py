@@ -1,3 +1,5 @@
+"""Модуль распознавания голосовых сообщений"""
+
 import json
 import os
 import subprocess
@@ -7,6 +9,7 @@ from vosk import KaldiRecognizer, Model, SetLogLevel
 SetLogLevel(-1)
 
 
+# класс распознавания текста
 class STT:
     default_init = {
         'model_path': './notebook/models/vosk/model',
@@ -24,10 +27,13 @@ class STT:
         self.recognizer = KaldiRecognizer(model, self.sample_rate)
         self.recognizer.SetWords(False)
 
+# проверяем наличие модели распознавания
     def _check_model(self) -> None:
         if not os.path.exists(self.model_path):
-            raise Exception('Модель не найдена!')
+            raise FileNotFoundError('Модель не найдена!')
 
+# распознаем аудио, предварительно конвертируя в нужный формат, и возвращаем
+# текст
     def audio_to_text(self, audio_file=None) -> str:
         cmd = f'ffmpeg -loglevel quiet -i {audio_file} -ar' \
               f' {str(self.sample_rate)} -ac 1 -f s16le -'

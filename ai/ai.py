@@ -1,3 +1,5 @@
+"""Модуль AI"""
+
 import logging
 import openai
 
@@ -19,4 +21,4 @@ async def get_response(message: str) -> str:
             presence_penalty=0)
         return response['choices'][0]['text']
     except Exception as error:
-        logging.info(f'{error}')
+        logging.info('%s', error)

@@ -1,14 +1,18 @@
+"""Модуль погоды"""
+
 import json
 import logging
-from aiohttp import ClientSession
+
 from dataclasses import dataclass
 from datetime import datetime as dt
+from aiohttp import ClientSession
+from typing import Optional
 
 import config
 
 
 # получаем json через get запрос к api по токену
-async def get_json(lat: int, lon: int) -> str:
+async def get_json(lat: int, lon: int) -> Optional[str]:
     async with ClientSession() as session:
         url = 'https://api.openweathermap.org/data/2.5/weather'
         params = {'lat': lat, 'lon': lon, 'appid': config.WEATHER_API_TOKEN,
@@ -18,7 +22,8 @@ async def get_json(lat: int, lon: int) -> str:
             try:
                 return json.dumps(weather_json)
             except Exception as error:
-                logging.info(f'{error}')
+                logging.info('%s', error)
+                return None
 
 
 # получаем ответ на запрос, парсим, возвращаем текст
@@ -33,7 +38,7 @@ async def get_weather(lat: int, lon: int) -> str:
            f'🌇: {wthr.sunset.strftime("%H:%M")}\n'
 
 
-# создаем класс weather
+# датакласс weather
 @dataclass()
 class Weather:
     location: str
@@ -53,6 +58,6 @@ def parse_response(response: str) -> Weather:
         temperature=openweather_dict['main']['temp'],
         temperature_feeling=openweather_dict['main']['feels_like'],
         description=str(openweather_dict['weather'][0]['description']).capitalize(),
-        sunrise=datetime.fromtimestamp(openweather_dict['sys']['sunrise']),
-        sunset=datetime.fromtimestamp(openweather_dict['sys']['sunset']),
+        sunrise=dt.fromtimestamp(openweather_dict['sys']['sunrise']),
+        sunset=dt.fromtimestamp(openweather_dict['sys']['sunset']),
         wind_speed=openweather_dict['wind']['speed'])
