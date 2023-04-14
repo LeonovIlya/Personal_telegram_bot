@@ -34,8 +34,8 @@ def add_rec(user_id: int, datetime: dt, text: str) -> Optional[bool]:
 def get_recs(user_id: int) -> Optional[list[tuple[str, Any]]]:
     try:
         recs = session.query(Reminder)\
-            .filter(Reminder.done is False)\
-            .filter(Reminder.user_id == user_id)\
+            .filter(Reminder.user_id == user_id) \
+            .filter(Reminder.done == False) \
             .order_by(Reminder.reminder_time.asc())
         result = [(str(i.reminder_time.strftime("%d %B в %H:%M")),
                    i.text)
@@ -49,9 +49,10 @@ def get_recs(user_id: int) -> Optional[list[tuple[str, Any]]]:
 # проверяем записи
 def check_recs(datetime: str) -> Optional[tuple]:
     try:
-        result = session.query(Reminder).filter(Reminder.reminder_time ==
-                                                datetime, Reminder.done is not
-                                                True).first()
+        result = session.query(Reminder)\
+            .filter(Reminder.reminder_time == datetime)\
+            .filter(Reminder.done == False)\
+            .first()
         return result
     except Exception as error:
         logging.info('%s', error)
